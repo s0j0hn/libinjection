@@ -6,7 +6,7 @@ AR=ar -r
 CC=cc
 LD=ld
 LDSHARED=ld -shared
-CFLAGS=-Wall -Wextra -Werror -pedantic -ansi -g -O3
+CFLAGS=-Wall -Wextra -Werror -pedantic -ansi -g -O3 -fPIC
 
 INSTALL=install
 PREFIX=/usr/local
@@ -33,8 +33,8 @@ OBJECTS=libinjection_sqli.o \
 SAMPLES=html5 sqli fptool
 TESTDRIVERS=reader testdriver testspeedxss testspeedsqli
 
-#all: ${SHAREDLIB} ${STATICLIB}
-all: ${STATICLIB}
+all: ${SHAREDLIB} ${STATICLIB}
+#all: ${STATICLIB}
 
 samples: ${SAMPLES}
 .PHONY: samples
@@ -43,7 +43,12 @@ fingerprints.txt: make_parens.py
 	./make_parens.py < fingerprints.txt > fingerprints2.txt
 	mv fingerprints2.txt fingerprints.txt
 
-sqlparse_data.json: sqlparse_map.py fingerprints.txt
+fingerprints:
+	./make_parens.py < fingerprints.txt > fingerprints2.txt
+	mv fingerprints2.txt fingerprints.txt
+.PHONY: fingerprints
+
+sqlparse_data.json: sqlparse_map.py fingerprints
 	./sqlparse_map.py > sqlparse_data.json
 
 libinjection_sqli_data.h: sqlparse2c.py sqlparse_data.json
@@ -123,7 +128,7 @@ clean:
 # We are not using scan-analyze since it depends on perl
 # Using clang directly produces text output which is fine for
 # automated testing.  Oddly -Werror doesn't work here, and
-# we have to test if any output occured or not.  This done by
+# we have to test if any output occurred or not.  This done by
 # piping output to a file and then checking what it contains.
 #
 # Open to better ideas here.

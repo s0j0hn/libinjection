@@ -136,9 +136,9 @@ class PermuteFingerprints(object):
         if 'v1' in s:
             return False
 
-        if 'nv' in s and ';T' not in s:
+        if 'nv' in s and 'T' not in s:
             return False
-        if 'nn' in s and ';T' not in s:
+        if 'nn' in s and 'T' not in s:
             return False
 
         # select @version foo is legit
@@ -177,7 +177,7 @@ class PermuteFingerprints(object):
             return False
 
         # select foo (as) bar is only nn type i know
-        if 'nn' in s and 'Enn' not in s and ';T' not in s:
+        if 'nn' in s and 'Enn' not in s and 'T' not in s:
             return False
 
         if ',o' in s:
@@ -282,14 +282,14 @@ class PermuteFingerprints(object):
             return False
         if 'v(n' in s:
             return False
-        if 'v(1' in s:
+        if 'v(1' in s and 'Tv(1' not in s:
             return False
         if 'v(v' in s:
             return False
-
+        if 'TTT' in s:
+            return False
         if s.startswith('n('):
             return False
-
         if s.startswith('vs'):
             return False
 
